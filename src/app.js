@@ -14,4 +14,10 @@ app.use(urlencoded({ extended: true, limit: "16kb" })); // take url data and enc
 app.use(express.static("public")); // can store static file or something in public folder
 app.use(cookieParser());
 
+//routes import
+import userRouter from "./routes/user.routes.js";
+
+//routes declaration - https://localhost:8000/users/register
+app.use("/api/v1/users", userRouter);
+
 export { app };
