@@ -8,7 +8,7 @@ cloudinary.config({
 });
 
 // Upload an image
-const uploadCloudinary = async function (localFilePath) {
+export const uploadCloudinary = async function (localFilePath) {
   try {
     if (!localFilePath) return null;
     const response = await cloudinary.uploader.upload(localFilePath, {
