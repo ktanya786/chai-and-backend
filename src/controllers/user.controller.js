@@ -13,7 +13,7 @@ export const registeredUser = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "Please fill in all fields");
   }
-  const existeduser = User.findOne({
+  const existeduser = await User.findOne({
     $or: [{ username }, { email }],
   });
   if (existeduser) {
@@ -21,7 +21,18 @@ export const registeredUser = asyncHandler(async (req, res) => {
   }
 
   const avatarLocalFilePath = req.files?.avatar[0]?.path;
-  const coverImageLocalFilePath = req.files?.coverImage[0]?.path;
+  //const coverImageLocalFilePath = req.files?.coverImage[0]?.path;
+
+  let coverImageLocalFilePath;
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalFilePath = req.files.coverImage[0].path;
+  } else {
+    coverImageLocalFilePath = null;
+  }
   if (!avatarLocalFilePath) {
     throw new ApiError(400, "Please upload an avatar");
   }
@@ -32,7 +43,7 @@ export const registeredUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     fullName,
     email,
-    username: username.toLowercase(),
+    username: username.toLowerCase(),
     password,
     avatar: avatar.url,
     coverImage: coverImage?.url || "",
